@@ -5,14 +5,21 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-client = SSOProvider::Client.new
-if Rails.env.production?
-  client.name = "elvo_utils"
-  client.app_id = "elvo_utils"
-  client.app_secret = "06f93dad68d0362cf96a05b51cfd21bf99bf1f5df1d003882011e641eeb402923315fc3be25912410089385a3bfaae2f08bf698ba7823d31106005bc90777615"
+clients = if Rails.env.production?
+  [
+      ["elvo_utils", "06f93dad68d0362cf96a05b51cfd21bf99bf1f5df1d003882011e641eeb402923315fc3be25912410089385a3bfaae2f08bf698ba7823d31106005bc90777615"],
+      ["elvo_website", "7341fb71e07981ce64e4744bcf45b1a3fa0a524b8327e3c89998c7485f92a59ed00eb6737f88ffab4a9be82e0c827b68ac9b79972250536ff439ef55148b1a53"]
+  ]
 else
-  client.name = "elvo_utils"
-  client.app_id = "ELVO"
-  client.app_secret = "1234"
+  [
+      ["ELVO", "1234"],
+      ["elvo_website", "5678"]
+  ]
 end
-client.save
+clients.each do |data|
+  client = SSOProvider::Client.new
+  client.name = data[0]
+  client.app_id = data[0]
+  client.app_secret = data[1]
+  client.save!
+end
