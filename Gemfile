@@ -22,3 +22,8 @@ group :development do
   gem 'rvm-capistrano'
   gem 'sextant'
 end
+
+group :production do
+  # JS runtime
+  gem 'therubyracer', :platforms => :ruby
+end
